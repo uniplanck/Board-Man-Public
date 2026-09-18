@@ -38,6 +38,8 @@ jobs:
           if [ -n "${GITHUB_BASE_REF:-}" ]; then
             git fetch --no-tags --depth=1 origin "$GITHUB_BASE_REF"
             git diff --check "origin/$GITHUB_BASE_REF...HEAD"
-          else
+          elif git rev-parse --verify HEAD~1 >/dev/null 2>&1; then
             git diff --check HEAD~1..HEAD
+          else
+            echo "Initial public snapshot has no parent commit; legacy snapshot whitespace is not gated here."
           fi
